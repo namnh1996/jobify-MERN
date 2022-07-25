@@ -2963,7 +2963,7 @@ const updaterUser = async (currentUser) => {
 ```js
 appContext.js
 
-// response interceptor
+// request interceptor
 authFetch.interceptors.request.use(
   (config) => {
     config.headers.common['Authorization'] = `Bearer ${state.token}`
@@ -3547,7 +3547,7 @@ if (action.type === CREATE_JOB_ERROR) {
 }
 ```
 
-#### Get All Jobs
+#### Get All Jobs Server
 
 ```js
 jobsController.js
