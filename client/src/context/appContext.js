@@ -203,7 +203,6 @@ const AppProvider = ({ children }) => {
 			dispatch({ type: CREATE_JOB_SUCCESS });
 			dispatch({ type: CLEAR_VALUES });
 		} catch (error) {
-			console.log(error);
 			if (error.response.status === 410) return;
 			dispatch({
 				type: CREATE_JOB_ERROR,
@@ -276,6 +275,23 @@ const AppProvider = ({ children }) => {
 	const changePage = (page) => {
 		dispatch({ type: CHANGE_PAGE, payload: { page } });
 	};
+
+	const showStats = async () => {
+		dispatch({ type: SHOW_STATS_BEGIN });
+		try {
+			const { data } = await authFetch("/jobs/stats");
+			dispatch({
+				type: SHOW_STATS_SUCCESS,
+				payload: {
+					stats: data.defaultStats,
+					monthlyApplications: data.monthlyApplications,
+				},
+			});
+		} catch (error) {
+			console.log(error.response);
+		}
+		clearAlert();
+	};
 	return (
 		<AppContext.Provider
 			value={{
@@ -295,6 +311,7 @@ const AppProvider = ({ children }) => {
 				changePage,
 				clearAlert,
 				editJob,
+				showStats,
 			}}
 		>
 			{children}
