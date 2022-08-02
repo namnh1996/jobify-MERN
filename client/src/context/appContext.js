@@ -1,4 +1,4 @@
-import React, { useReducer, useContext, useEffect } from "react";
+import React, { useReducer, useContext } from "react";
 
 import reducer from "./reducer";
 import axios from "axios";
@@ -213,8 +213,11 @@ const AppProvider = ({ children }) => {
 	};
 
 	const getJobs = async () => {
-		let url = `/jobs`;
-
+		const { search, searchStatus, searchType, sort } = state;
+		let url = `/jobs?status=${searchStatus}&jobType=${searchType}&sort=${sort}`;
+		if (search) {
+			url = url + `&search=${search}`;
+		}
 		dispatch({ type: GET_JOBS_BEGIN });
 		try {
 			const { data } = await authFetch(url);
@@ -230,6 +233,7 @@ const AppProvider = ({ children }) => {
 		} catch (error) {
 			logoutUser();
 		}
+		clearAlert();
 	};
 	const setEditJob = (id) => {
 		dispatch({ type: SET_EDIT_JOB, payload: { id } });
@@ -288,7 +292,7 @@ const AppProvider = ({ children }) => {
 				},
 			});
 		} catch (error) {
-			console.log(error.response);
+			logoutUser();
 		}
 		clearAlert();
 	};
